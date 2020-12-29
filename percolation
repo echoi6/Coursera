@@ -1,0 +1,106 @@
+package Percolation;
+
+public class Percolation {
+    private final int width;
+    private final int size;
+    //private final WeightedQuickUnionUF[] uf;
+    private boolean[] open;
+    private boolean percolate;
+
+    // creates n-by-n grid, with all sites initially blocked
+    public Percolation(int N) {
+        width = N;
+        size = N * N;
+        //uf = new WeightedQuickUnionUF[size];
+        open = new boolean[size];
+        percolate = false;
+
+        for (int i; i < size; i++) {
+            open[i] = false;
+        }
+    }
+
+
+    // opens the site (row, col) if it is not open already
+    public void open(int i, int j) {
+        int num = convertTo1D(i, j);
+        open[num] = true;
+        connectToOpenNeighbors(i, j);
+    }
+
+    private void connectToOpenNeighbors(int i, int j) {
+        int index = convertTo1D(i, j);
+
+        //try to connect neighbor sites in the same row
+        if (j < width) attemptUnion(index + 1, index);
+        if (j > 1) attemptUnion(index - 1, index);
+
+        if (i < width) {
+            attemptUnion(index - width, index);
+        } else {
+            //uf.union(index, size + 1);
+        }
+        if (i > 1) {
+            attemptUnion(index + width, index);
+        } else {
+            //uf.union(index, size);
+        }
+    }
+
+    private void attemptUnion(int i, int j) {
+        if (isOpen(i, j)) {
+            //uf.union(i, j);
+        }
+    }
+
+    // is the site (row, col) open?
+    public boolean isOpen(int i, int j) {
+        int num = convertTo1D(i, j);
+        if (open[num]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    // is the site (row, col) full?
+    public boolean isFull(int i, int j) {
+        int num = convertTo1D(i, j);
+        //if (uf.connected(num, num + 1)) {
+        //    open[num] = true;
+        //}
+        return open[num];
+    }
+
+
+    // convert 2d to 1d coordinate
+    private int convertTo1D(int i, int j) {
+        return (i * width + j);
+    }
+
+    // test client (optional)
+    public static void main(String[] args) {
+
+
+        Percolation perc = new Percolation(3);
+        perc.open(0, 2);
+        perc.open(1, 2);
+        perc.open(2, 2);
+        perc.open(1, 0);
+        perc.open(2, 0);
+        perc.open(0, 0);
+
+        for (int i = 0; i < width; i++) {
+            if (perc.isFull(0, i)) {
+                percolate = true;
+            }
+        }
+
+        if (!percolate) {
+            System.out.println("It Percolates!");
+        } else {
+            System.out.println("It doesn't percolates!");
+        }
+    }
+}
