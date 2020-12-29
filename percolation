@@ -3,7 +3,7 @@ package Percolation;
 public class Percolation {
     private final int width;
     private final int size;
-    //private final WeightedQuickUnionUF[] uf;
+    private final WeightedQuickUnionUF[] uf;
     private boolean[] open;
     private boolean percolate;
 
@@ -11,7 +11,7 @@ public class Percolation {
     public Percolation(int N) {
         width = N;
         size = N * N;
-        //uf = new WeightedQuickUnionUF[size];
+        uf = new WeightedQuickUnionUF[size];
         open = new boolean[size];
         percolate = false;
 
@@ -38,18 +38,18 @@ public class Percolation {
         if (i < width) {
             attemptUnion(index - width, index);
         } else {
-            //uf.union(index, size + 1);
+            uf.union(index, size + 1);
         }
         if (i > 1) {
             attemptUnion(index + width, index);
         } else {
-            //uf.union(index, size);
+            uf.union(index, size);
         }
     }
 
     private void attemptUnion(int i, int j) {
         if (isOpen(i, j)) {
-            //uf.union(i, j);
+            uf.union(i, j);
         }
     }
 
@@ -67,9 +67,9 @@ public class Percolation {
     // is the site (row, col) full?
     public boolean isFull(int i, int j) {
         int num = convertTo1D(i, j);
-        //if (uf.connected(num, num + 1)) {
-        //    open[num] = true;
-        //}
+        if (uf.connected(num, num + 1)) {
+            open[num] = true;
+        }
         return open[num];
     }
 
